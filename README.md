@@ -7,6 +7,7 @@ A new tab page for Firefox and Chrome that you lay out yourself: a grid of even 
 - **Edit:** press <kbd>Esc</kbd> or <kbd>⌘ E</kbd> / <kbd>Ctrl E</kbd>, or hold down on an empty part of the page.
 - **Add a tile:** click an empty square, or drag across several for a bigger one, then pick what goes in it. Pasting or dropping an address adds a link.
 - **Web page tiles** show a live site. Some sites refuse to be shown inside another page and stay blank. Set what the tile says while you're offline.
+- **Replace a tab:** <kbd>⌥ ⇧ N</kbd> / <kbd>Alt Shift N</kbd> turns the current tab into a new tab, instead of opening one and closing the old. Change the keys in `about:addons` → ⚙ → Manage Extension Shortcuts (Firefox) or `chrome://extensions/shortcuts` (Chrome).
 - **Move or resize:** drag a tile to move it, drag its edges or corners to resize it. With the keyboard, press <kbd>Space</kbd> on a tile, then use the arrow keys to move it and <kbd>Shift</kbd> plus arrows to resize it.
 - **Change how things look:** with nothing selected, the panel changes the whole page. Click a tile to change only that one, or Shift-click to change several together.
 - **Find anything:** start typing on the page to search your links and the web.

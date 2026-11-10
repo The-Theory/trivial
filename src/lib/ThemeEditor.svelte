@@ -5,6 +5,7 @@
   import LookFields from './ui/LookFields.svelte'
   import Segmented from './ui/Segmented.svelte'
   import Swatches from './ui/Swatches.svelte'
+  import { webext } from './webext'
 
   const t = $derived(app.config.theme)
 
@@ -14,6 +15,11 @@
   const cssDocs = 'https://github.com/The-Theory/foyer#custom-css'
 
   let importError = $state('')
+
+  // The browser owns the key binding; show what it is and where to change it.
+  let shortcut = $state('')
+  webext?.commands?.getAll().then(all => (shortcut = all.find(c => c.name === 'replace-tab')?.shortcut ?? ''))
+  const shortcutsPage = navigator.userAgent.includes('Firefox') ? 'about:addons → ⚙ → Manage Extension Shortcuts' : 'chrome://extensions/shortcuts'
 
   const exportHref = $derived(`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(app.config, null, 2))}`)
 
@@ -70,6 +76,9 @@
   <label class="field"><span>Tab title</span><input bind:value={t.pageTitle} /></label>
   <label class="check"><input type="checkbox" bind:checked={t.newTab} /> Open links in a new tab</label>
   <label class="check"><input type="checkbox" bind:checked={t.editCorner} /> Edit button in corner</label>
+  {#if webext?.commands}
+    <p>{#if shortcut}<kbd>{shortcut}</kbd> turns the current tab into a new tab.{:else}No shortcut set for turning the current tab into a new tab.{/if} Change it in {shortcutsPage}.</p>
+  {/if}
 </section>
 
 <section>
