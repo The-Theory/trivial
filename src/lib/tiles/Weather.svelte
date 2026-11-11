@@ -48,7 +48,7 @@
         localStorage.setItem(key, JSON.stringify(reading))
       })
       .catch(error => {
-        console.warn('Foyer: weather request failed', error)
+        console.warn('Trivial: weather request failed', error)
         failed = !old
       })
   })

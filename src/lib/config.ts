@@ -142,7 +142,7 @@ export function settle(tiles: Tile[], g: Grid): Tile[] {
     const moved = shifted[i]
     const spot  = inGrid(moved, g) && fits(moved, placed) ? moved : findFree(tile.w, tile.h, placed, g)
     if (spot) placed.push({ ...tile, ...spot })
-    else console.warn('Foyer: no room left on the board for a tile', tile)
+    else console.warn('Trivial: no room left on the board for a tile', tile)
   }
   return placed
 }
@@ -205,7 +205,7 @@ const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'obj
 // Fills anything missing with defaults, so old or hand-edited files keep working.
 export function parseConfig(json: string): Config {
   const data: unknown = JSON.parse(json)
-  if (!isRecord(data) || !Array.isArray(data.tiles) || !isRecord(data.theme)) throw new Error('This file is not a Foyer layout.')
+  if (!isRecord(data) || !Array.isArray(data.tiles) || !isRecord(data.theme)) throw new Error('This file is not a Trivial layout.')
 
   // Keys unknown to this version, or of the wrong type (older layouts stored sizes as numbers), fall back to defaults.
   const saved    = data.theme

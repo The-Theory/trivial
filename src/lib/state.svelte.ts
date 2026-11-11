@@ -174,7 +174,7 @@ export async function load() {
   if (json) {
     try { app.config = parseConfig(json) }
     catch (error) {
-      console.warn('Foyer: stored layout unreadable, kept a copy under "config-backup"', error)
+      console.warn('Trivial: stored layout unreadable, kept a copy under "config-backup"', error)
       write('config-backup', json)
     }
   }

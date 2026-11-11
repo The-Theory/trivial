@@ -12,7 +12,7 @@
   const get = <K extends LookKey>(key: K) => t[key]
   const set = <K extends LookKey>(key: K, value: Look[K]) => ((t as Look)[key] = value)
 
-  const cssDocs = 'https://github.com/The-Theory/foyer#custom-css'
+  const cssDocs = 'https://github.com/The-Theory/trivial#custom-css'
 
   let importError = $state('')
 
@@ -90,7 +90,7 @@
 <section>
   <h3>Backup</h3>
   <div class="row">
-    <a class="button" href={exportHref} download="foyer-layout.json">Export</a>
+    <a class="button" href={exportHref} download="trivial-layout.json">Export</a>
     <label class="button">Import<input type="file" accept="application/json,.json" class="sr-only" onchange={importFile} /></label>
     <button class="button danger" onclick={reset}>Reset</button>
   </div>

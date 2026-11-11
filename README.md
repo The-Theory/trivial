@@ -1,4 +1,4 @@
-# Foyer
+# Trivial
 
 A new tab page for Firefox and Chrome that you lay out yourself: a grid of even squares holding links, groups of links, a clock, weather, notes, live web pages and images. It loads from the extension itself, so it opens instantly and works offline.
 
@@ -15,7 +15,7 @@ A new tab page for Firefox and Chrome that you lay out yourself: a grid of even 
 
 ## Custom CSS
 
-Page settings → Custom CSS takes any CSS you like, for anything the settings can't do. Your rules load after Foyer's own, so they win. Mistakes can't break anything: delete the rule and the page goes back to how it was.
+Page settings → Custom CSS takes any CSS you like, for anything the settings can't do. Your rules load after Trivial's own, so they win. Mistakes can't break anything: delete the rule and the page goes back to how it was.
 
 ### What you can target
 
@@ -78,7 +78,7 @@ Sizes based on `--cell` stay in proportion when the window or the number of squa
 
 ## Installing in Chrome
 
-Run `npm run chrome`, open `chrome://extensions`, turn on **Developer mode** and choose **Load unpacked**, then pick the `dist-chrome` folder. Chrome keeps it installed across restarts. To publish it instead, upload `release/foyer-chrome-<version>.zip` from `npm run package` to the [Chrome Web Store](https://chrome.google.com/webstore/devconsole).
+Run `npm run chrome`, open `chrome://extensions`, turn on **Developer mode** and choose **Load unpacked**, then pick the `dist-chrome` folder. Chrome keeps it installed across restarts. To publish it instead, upload `release/trivial-chrome-<version>.zip` from `npm run package` to the [Chrome Web Store](https://chrome.google.com/webstore/devconsole).
 
 ## Building
 

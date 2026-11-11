@@ -1,7 +1,7 @@
 {
-  "name": "foyer",
+  "name": "trivial",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,7 @@
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
     "firefox": "vite build && web-ext run -s dist",
     "chrome": "vite build && node scripts/chrome.js",
-    "package": "npm run chrome && web-ext build -s dist -a release --overwrite-dest && web-ext build -s dist-chrome -a release -n foyer-chrome-{version}.zip --overwrite-dest",
+    "package": "npm run chrome && web-ext build -s dist -a release --overwrite-dest && web-ext build -s dist-chrome -a release -n trivial-chrome-{version}.zip --overwrite-dest",
     "lint:ext": "vite build && web-ext lint -s dist",
     "sign": "vite build && web-ext sign -s dist --channel unlisted -a release"
   },

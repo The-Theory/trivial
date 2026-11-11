@@ -43,7 +43,7 @@
       places = data.results ?? []
       failed = false
     } catch (error) {
-      console.warn('Foyer: city search failed', error)
+      console.warn('Trivial: city search failed', error)
       failed = true
     }
   }
