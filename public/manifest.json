@@ -13,7 +13,7 @@
       "description": "Turn the current tab into a new tab"
     }
   },
-  "permissions": ["storage", "unlimitedStorage", "search"],
+  "permissions": ["storage", "unlimitedStorage", "search", "webNavigation"],
   "host_permissions": ["https://www.google.com/s2/favicons*", "https://*.gstatic.com/faviconV2*"],
   "browser_specific_settings": {
     "gecko": {
