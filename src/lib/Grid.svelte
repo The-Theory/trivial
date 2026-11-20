@@ -6,6 +6,7 @@
   import { arrows, firstIn, focusOnMount, isNavTarget, navTarget } from './nav'
   import { addTile, app, ease, editTile, grid as gridSize, handleEls, keys, ms, removeTiles, tileEls } from './state.svelte'
   import Clock from './tiles/Clock.svelte'
+  import Countdown from './tiles/Countdown.svelte'
   import Weather from './tiles/Weather.svelte'
   import Web from './tiles/Web.svelte'
   import LinkItem from './ui/LinkItem.svelte'
@@ -386,6 +387,8 @@
           <Weather {tile} />
         {:else if tile.kind === 'web'}
           <Web {tile} />
+        {:else if tile.kind === 'countdown'}
+          <Countdown {tile} />
         {:else if tile.kind === 'image'}
           {#if tile.src}<img class="picture fit-{tile.fit}" src={tile.src} alt="" draggable="false" />{:else}<p class="hint padded">No image</p>{/if}
         {:else}
