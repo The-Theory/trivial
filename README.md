@@ -1,12 +1,13 @@
 # Trivial
 
-A new tab page for Firefox and Chrome that you lay out yourself: a grid of even squares holding links, groups of links, a clock, weather, notes, live web pages and images. It loads from the extension itself, so it opens instantly and works offline.
+A new tab page for Firefox and Chrome that you lay out yourself: a grid of even squares holding links, groups of links, a clock, weather, notes, live web pages, images and countdowns. It loads from the extension itself, so it opens instantly and works offline.
 
 ## Using it
 
 - **Edit:** press <kbd>Esc</kbd> or <kbd>⌘ E</kbd> / <kbd>Ctrl E</kbd>, or hold down on an empty part of the page.
 - **Add a tile:** click an empty square, or drag across several for a bigger one, then pick what goes in it. Pasting or dropping an address adds a link.
 - **Web page tiles** show a live site. Some sites refuse to be shown inside another page and stay blank. Links to another site open in the whole tab, links within the same site stay in the tile. Set what the tile says while you're offline.
+- **Countdown tiles** show how many days are left until dates you pick, nearest first. A date drops off the tile the day after it passes. Everything stays on your computer.
 - **Replace a tab:** <kbd>⌥ ⇧ N</kbd> / <kbd>Alt Shift N</kbd> turns the current tab into a new tab, instead of opening one and closing the old. Change the keys in `about:addons` → ⚙ → Manage Extension Shortcuts (Firefox) or `chrome://extensions/shortcuts` (Chrome).
 - **Move or resize:** drag a tile to move it, drag its edges or corners to resize it. With the keyboard, press <kbd>Space</kbd> on a tile, then use the arrow keys to move it and <kbd>Shift</kbd> plus arrows to resize it.
 - **Change how things look:** with nothing selected, the panel changes the whole page. Click a tile to change only that one, or Shift-click to change several together.
@@ -22,7 +23,7 @@ Page settings → Custom CSS takes any CSS you like, for anything the settings c
 | Selector | What it is |
 | --- | --- |
 | `.tile` | Every tile |
-| `[data-kind="link"]` | Tiles of one kind: `link`, `group`, `clock`, `weather`, `note`, `web` or `image` |
+| `[data-kind="link"]` | Tiles of one kind: `link`, `group`, `clock`, `weather`, `note`, `web`, `image` or `countdown` |
 | `[data-tile="…"]` | One tile. Its exact selector is at the bottom of that tile's settings |
 | `.icon`, `.label` | Site icons and their names |
 | `.glyph` | Icons made of text |
@@ -30,6 +31,8 @@ Page settings → Custom CSS takes any CSS you like, for anything the settings c
 | `.time`, `.date` | The clock's time and date |
 | `.temp`, `.cond` | The temperature and the conditions |
 | `.note` | The text area of a note |
+| `.countdown .days`, `.countdown .event` | A countdown's large number, and the name of each date |
+| `.countdown .later`, `.countdown .when` | The list of later dates, and the dates themselves (when shown) |
 | `.web iframe`, `.offline` | A web page tile's page, and what it shows offline |
 | `.picture` | An image tile's image |
 | `body` | The page behind the tiles |

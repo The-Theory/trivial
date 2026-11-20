@@ -259,6 +259,24 @@ kbd {
 .weather .meta { display: flex; justify-content: space-between; gap: 6px; margin-top: 2px; font-size: 7.5cqmin; color: var(--muted); }
 .weather .meta span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+/* Countdown: the nearest date large, the rest listed under it. */
+.countdown { position: absolute; inset: 0; box-sizing: border-box; padding: max(11cqmin, var(--pad)); display: flex; flex-direction: column; gap: 7cqmin; }
+.countdown p { margin: 0; }
+.countdown .days { font-size: 28cqmin; font-weight: 200; line-height: .9; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.countdown:is(.alone, .compact) .days { font-size: 40cqmin; }
+.countdown .days.today { letter-spacing: -.02em; }
+.countdown .unit { font-size: .26em; font-weight: 500; letter-spacing: 0; margin-left: .3em; color: var(--muted); }
+.countdown .next .event { margin-top: 3cqmin; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 9.5cqmin; font-weight: 550; }
+.countdown.alone .next { display: flex; flex-direction: column; flex: 1; }
+.countdown.alone .next .event { margin-top: auto; }
+.countdown .when { color: var(--muted); font-size: 7.5cqmin; }
+.countdown .later { list-style: none; margin: 0; padding: 0; min-height: 0; overflow-y: auto; scrollbar-width: none; display: flex; flex-direction: column; gap: 2.5cqmin; font-size: 7.5cqmin; }
+.countdown .later li { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+.countdown .later .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.countdown .later .when { margin-left: .6em; }
+.countdown .later .left { flex: none; color: var(--muted); font-variant-numeric: tabular-nums; }
+.countdown .hint { margin: auto 0; }
+
 /* Web page: a live site, optionally zoomed out to fit more of it. */
 .web { --zoom: 1; position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
 .web.zoom-75 { --zoom: .75; }
@@ -501,7 +519,7 @@ kbd {
 .field > span { color: var(--ui-text); font-size: 13.5px; font-weight: 500; }
 .file { flex: 1; color: var(--ui-text); }
 
-.sheet input:is(:not([type]), [type='url']), .sheet textarea {
+.sheet input:is(:not([type]), [type='url'], [type='date']), .sheet textarea {
   min-width: 0;
   box-sizing: border-box;
   padding: 10px 12px;
@@ -512,7 +530,7 @@ kbd {
   font: inherit;
   transition: border-color .15s;
 }
-.sheet input:is(:not([type]), [type='url']):focus, .sheet textarea:focus { border-color: var(--ui-muted); outline: none; }
+.sheet input:is(:not([type]), [type='url'], [type='date']):focus, .sheet textarea:focus { border-color: var(--ui-muted); outline: none; }
 .sheet input::placeholder, .sheet textarea::placeholder { color: #ffffff45; }
 .sheet textarea.code { min-height: 180px; resize: vertical; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; line-height: 1.55; }
 .sheet input[type='checkbox'] { accent-color: var(--ui-text); }
@@ -604,6 +622,12 @@ kbd {
 .summary span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .summary .icon { width: 20px; height: 20px; border-radius: 6px; }
 .nested { display: flex; flex-direction: column; gap: 14px; padding: 6px 12px 16px; }
+
+.dates { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.dates li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 6px; }
+.dates li p { grid-column: 1 / -1; margin-top: -2px; }
+.dates li.passed input { color: var(--ui-muted); }
+.sheet input[type='date'] { color-scheme: dark; }
 
 .places { list-style: none; margin: -8px 0 0; padding: 4px; border-radius: 10px; background: var(--ui-2); }
 .places li { color: var(--ui-muted); }

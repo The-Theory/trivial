@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, untrack } from 'svelte'
   import { focusOnMount } from './nav'
-  import { kinds, linkName, newLink, type Link, type Look, type LookKey, type Tile, type WeatherTile } from './config'
+  import { daysUntil, kinds, linkName, newCountdown, newLink, type Countdown, type Link, type Look, type LookKey, type Tile, type WeatherTile } from './config'
   import { app, deselect, removeTiles } from './state.svelte'
   import Icon from './ui/Icon.svelte'
   import ImageInput from './ui/ImageInput.svelte'
@@ -58,6 +58,17 @@
     const j = i + by
     if (j < 0 || j >= links.length) return
     ;[links[i], links[j]] = [links[j], links[i]]
+  }
+
+  // Dates with nothing typed yet count as upcoming, so a new row doesn't show as passed.
+  const passed = (c: Countdown) => !!c.date && daysUntil(c.date) < 0
+
+  let added = $state('')
+
+  function addDate(dates: Countdown[]) {
+    const date = newCountdown()
+    dates.push(date)
+    added = date.id
   }
 
   function addLink(links: Link[]) {
@@ -146,6 +157,30 @@
   <p>Some sites don't allow being shown inside a tile and stay blank.</p>
   <Segmented label="Zoom" options={[['100', '100%'], ['75', '75%'], ['50', '50%']]} bind:value={tile.zoom} />
   <label class="field"><span>When offline, show</span><input bind:value={tile.offline} placeholder="Offline" /></label>
+  </section>
+
+{:else if tile.kind === 'countdown'}
+  <section>
+  <h3>Dates</h3>
+  {#if tile.dates.length}
+    <ul class="dates">
+      {#each tile.dates as date, i (date.id)}
+        <li class:passed={passed(date)}>
+          <input bind:value={date.label} placeholder="Name" aria-label="Name" use:focusOnMount={added === date.id || (focus && i === 0)} />
+          <input type="date" bind:value={date.date} aria-label="Date{date.label ? ` of ${date.label}` : ''}" />
+          <button class="button ghost icon-only" aria-label="Remove {date.label || 'date'}" onclick={() => tile.dates.splice(i, 1)}>✕</button>
+          {#if passed(date)}<p>Passed, so it's hidden on the tile.</p>{/if}
+        </li>
+      {/each}
+    </ul>
+  {/if}
+  <div class="row">
+    <button class="button" onclick={() => addDate(tile.dates)} use:focusOnMount={focus && !tile.dates.length}>Add date</button>
+    {#if tile.dates.some(passed)}
+      <button class="button ghost" onclick={() => (tile.dates = tile.dates.filter(d => !passed(d)))}>Remove passed</button>
+    {/if}
+  </div>
+  <label class="check"><input type="checkbox" bind:checked={tile.showDates} /> Show the dates</label>
   </section>
 
 {:else if tile.kind === 'image'}

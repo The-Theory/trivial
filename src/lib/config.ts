@@ -46,7 +46,10 @@ export type WeatherTile = TileBase & { kind: 'weather'; place: string; lat: numb
 export type NoteTile    = TileBase & { kind: 'note'; text: string }
 export type WebTile     = TileBase & { kind: 'web'; url: string; zoom: '50' | '75' | '100'; offline: string }
 export type ImageTile   = TileBase & { kind: 'image'; src: string; fit: 'cover' | 'contain' }
-export type Tile = LinkTile | GroupTile | ClockTile | WeatherTile | NoteTile | WebTile | ImageTile
+// A day to count down to, as a local calendar date (YYYY-MM-DD), so it never shifts with time zones.
+export interface Countdown { id: string; label: string; date: string }
+export type CountdownTile = TileBase & { kind: 'countdown'; dates: Countdown[]; showDates: boolean }
+export type Tile = LinkTile | GroupTile | ClockTile | WeatherTile | NoteTile | WebTile | ImageTile | CountdownTile
 export type Kind = Tile['kind']
 
 export interface Theme extends Look {
@@ -72,6 +75,7 @@ export const kinds: Record<Kind, { name: string; about: string; size: [number, n
   note:    { name: 'Note',    about: 'Text that saves as you type',   size: [2, 2] },
   web:     { name: 'Web page', about: 'A live site inside the tile',  size: [4, 3] },
   image:   { name: 'Image',   about: 'A picture',                     size: [2, 2] },
+  countdown: { name: 'Countdown', about: 'Days left until dates you pick', size: [2, 2] },
 }
 
 export const fonts: Record<string, string> = {
@@ -101,8 +105,39 @@ export function newTile(kind: Kind, box: Box): Tile {
     case 'note':    return { ...base, kind, text: '' }
     case 'web':     return { ...base, kind, url: '', zoom: '100', offline: '' }
     case 'image':   return { ...base, kind, src: '', fit: 'cover' }
+    case 'countdown': return { ...base, kind, dates: [], showDates: false }
   }
 }
+
+export const newCountdown = (label = '', date = ''): Countdown => ({ id: newId(), label, date })
+
+// --- Countdowns --------------------------------------------------------------
+
+const isDate = (v: unknown): v is string => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)
+
+// Midnight at the start of a local calendar day.
+const dayOf = (date: string) => {
+  const [y, m, d] = date.split('-').map(Number)
+  return new Date(y, m - 1, d)
+}
+
+// Whole days from today to the date: 0 is today, negative has passed. Rounded, so a day
+// that is 23 or 25 hours long around a clock change still counts as one.
+export function daysUntil(date: string, today = new Date()) {
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  return Math.round((dayOf(date).getTime() - start.getTime()) / 86_400_000)
+}
+
+// Dates still to come (today included), nearest first. Entries without a date are left out.
+export function upcoming(dates: Countdown[], today = new Date()) {
+  return dates
+    .filter(c => isDate(c.date))
+    .map(c => ({ ...c, days: daysUntil(c.date, today) }))
+    .filter(c => c.days >= 0)
+    .sort((a, b) => a.days - b.days || a.label.localeCompare(b.label))
+}
+
+export const formatDay = (date: string) => dayOf(date).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })
 
 // --- Geometry ----------------------------------------------------------------
 
@@ -220,6 +255,11 @@ export function parseConfig(json: string): Config {
     if (t.frame === false) style.fill = 'none' // layouts from before tiles had a fill choice
     if (style.fill === 'solid' && !style.fillOpacity) style.fillOpacity = '100' // solid used to mean opaque
     const { frame: _frame, ...rest } = t
+    if (t.kind === 'countdown') rest.dates = (Array.isArray(t.dates) ? t.dates : []).filter(isRecord).map(c => ({
+      id:    typeof c.id === 'string' ? c.id : newId(),
+      label: typeof c.label === 'string' ? c.label : '',
+      date:  isDate(c.date) ? c.date : '',
+    }))
     return [{ ...newTile(t.kind as Kind, box as Box), ...rest, style } as Tile]
   })
   if (!(theme.squares in grids)) theme.squares = defaults.squares
