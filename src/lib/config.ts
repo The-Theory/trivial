@@ -17,6 +17,9 @@ export const grids = {
   m:  { cols: 12, rows: 8 },
   l:  { cols: 10, rows: 6 },
   xl: { cols: 8, rows: 5 },
+  // Tall grids for a phone held upright.
+  ts: { cols: 6, rows: 10 },
+  tm: { cols: 4, rows: 7 },
 } satisfies Record<string, Grid>
 export type GridSize = keyof typeof grids
 
@@ -173,29 +176,30 @@ export const favicon = (url: string) => `https://www.google.com/s2/favicons?sz=1
 // --- Defaults & parsing ------------------------------------------------------
 
 export function defaultConfig(): Config {
-  const at = (x: number, y: number, w = 1, h = 1) => ({ x, y, w, h })
-  const link = (x: number, title: string, url: string) => ({ ...newTile('link', at(x, 3)), link: newLink(title, url) }) as LinkTile
+  // A screen held upright (a phone) starts on a tall grid with the same tiles stacked to fit.
+  const tall = matchMedia('(orientation: portrait)').matches
+  const at   = (wide: Box, narrow: Box) => (tall ? narrow : wide)
+  const box  = (x: number, y: number, w = 1, h = 1) => ({ x, y, w, h })
+  const sites = [
+    ['Claude', 'claude.ai'], ['Translate', 'translate.google.com'], ['GitHub', 'github.com'], ['Gmail', 'mail.google.com'],
+    ['Pinterest', 'pinterest.com'], ['Spotify', 'open.spotify.com'], ['YouTube', 'youtube.com'], ['Modrinth', 'modrinth.com'],
+  ]
+  const links = sites.map(([title, url], i) => ({ ...newTile('link', at(box(2 + i, 3), box(i % 4, 4 + Math.floor(i / 4)))), link: newLink(title, url) }) as LinkTile)
+  const college = { ...newTile('group', box(2, 4, 4, 2)), title: 'College' } as GroupTile
   return {
     version: 1,
     theme: {
-      squares: 'm', background: '#1c1c1e', image: '', imageFit: 'cover', imagePosition: 'center', dim: 0,
+      squares: tall ? 'tm' : 'm', background: '#1c1c1e', image: '', imageFit: 'cover', imagePosition: 'center', dim: 0,
       fill: 'glass', fillColor: '#ffffff', fillOpacity: '10', frost: 'medium', corners: 'soft', text: '#f2f1ed', font: 'system', iconSize: 'm', iconShape: 'rounded',
       labels: 'hover', newTab: false, editCorner: true, pageTitle: 'New Tab', css: '',
     },
     tiles: [
-      { ...newTile('clock', at(2, 1, 4, 2)), style: { fill: 'none' } } as ClockTile,
-      newTile('weather', at(6, 1, 2, 2)),
-      newTile('note', at(8, 1, 2, 2)),
-      link(2, 'Claude', 'claude.ai'),
-      link(3, 'Translate', 'translate.google.com'),
-      link(4, 'GitHub', 'github.com'),
-      link(5, 'Gmail', 'mail.google.com'),
-      link(6, 'Pinterest', 'pinterest.com'),
-      link(7, 'Spotify', 'open.spotify.com'),
-      link(8, 'YouTube', 'youtube.com'),
-      link(9, 'Modrinth', 'modrinth.com'),
-      { ...newTile('group', at(2, 4, 4, 2)), title: 'College' } as GroupTile,
-      { ...newTile('group', at(6, 4, 4, 2)), title: 'Personal', links: [newLink('Games', 'games.traced.red')] } as GroupTile,
+      { ...newTile('clock', at(box(2, 1, 4, 2), box(0, 0, 4, 2))), style: { fill: 'none' } } as ClockTile,
+      newTile('weather', at(box(6, 1, 2, 2), box(0, 2, 2, 2))),
+      newTile('note', at(box(8, 1, 2, 2), box(2, 2, 2, 2))),
+      ...links,
+      ...(tall ? [] : [college]),
+      { ...newTile('group', at(box(6, 4, 4, 2), box(0, 6, 4, 1))), title: 'Personal', links: [newLink('Games', 'games.traced.red')] } as GroupTile,
     ],
   }
 }

@@ -54,7 +54,7 @@ kbd {
 }
 
 .page {
-  height: 100vh;
+  height: 100dvh; /* the visible height on phones, without the browser's toolbars */
   overflow: hidden;
   box-sizing: border-box;
   padding: 40px 40px 76px;
@@ -64,6 +64,7 @@ kbd {
   justify-content: center;
   transition: padding .35s var(--ease);
 }
+
 
 /* While editing, the board shrinks to sit beside the panel instead of under it. */
 @media (min-width: 900px) {
@@ -75,6 +76,9 @@ kbd {
 /* --- Grid ------------------------------------------------------------------ */
 
 .board {
+  /* Holding down enters edit mode; a phone shouldn't select text or pop up a menu instead. */
+  -webkit-touch-callout: none;
+  user-select: none;
   /* --cell, one square in pixels, is set from Grid.svelte. */
   --inset: calc(var(--cell) * .07);
   position: relative;
@@ -547,16 +551,20 @@ kbd {
 
 .pv-grid {
   --n: 12;
+  --c: calc(48px / var(--n)); /* one square */
   width: 48px;
   height: 30px;
   background:
-    linear-gradient(to right, var(--bg) 1.5px, transparent 1.5px) 0 0 / calc(48px / var(--n)) calc(48px / var(--n)),
-    linear-gradient(to bottom, var(--bg) 1.5px, transparent 1.5px) 0 0 / calc(48px / var(--n)) calc(48px / var(--n)),
+    linear-gradient(to right, var(--bg) 1.5px, transparent 1.5px) 0 0 / var(--c) var(--c),
+    linear-gradient(to bottom, var(--bg) 1.5px, transparent 1.5px) 0 0 / var(--c) var(--c),
     color-mix(in srgb, var(--text) 30%, transparent);
 }
 .pv-grid.s  { --n: 16; }
 .pv-grid.l  { --n: 10; }
 .pv-grid.xl { --n: 8; }
+/* Tall grids are drawn upright: as tall as the others, narrower. */
+.pv-grid.ts { --c: 3px; width: 18px; }
+.pv-grid.tm { --c: calc(30px / 7); width: calc(120px / 7); }
 .pv-font { font-size: 22px; line-height: 1; }
 .pv-font.system  { font-family: system-ui, sans-serif; }
 .pv-font.rounded { font-family: ui-rounded, system-ui, sans-serif; }
@@ -616,6 +624,11 @@ kbd {
 .corner { position: fixed; right: 0; bottom: 0; display: flex; align-items: flex-end; justify-content: flex-end; width: 180px; height: 110px; padding: 16px; box-sizing: border-box; }
 .corner .button { opacity: 0; translate: 0 4px; transition: opacity .2s, translate .25s var(--ease), background-color .15s; }
 .corner:hover .button, .corner .button:focus-visible { opacity: 1; translate: 0 0; }
+/* Touch screens can't hover, so the edit button stays in view. */
+@media (hover: none) {
+  .corner .button { opacity: 1; translate: 0 0; }
+  .button kbd { display: none; } /* shortcut hints, with no keyboard to press them on */
+}
 
 .palette {
   position: fixed;
@@ -660,4 +673,16 @@ kbd {
 
 @media (prefers-reduced-motion: reduce) {
   *, .ring { transition: none !important; }
+}
+
+/* --- Phones --------------------------------------------------------------- */
+
+/* The board gets the whole screen, keeping room at the bottom for the edit button. */
+@media (max-width: 600px) {
+  .page { padding: 12px 12px 64px; }
+  /* While editing, the panel is a sheet over the bottom half and the board shrinks into the top,
+     under the toolbar. */
+  .page.editing { padding: 68px 12px calc(52dvh + 12px); }
+  .sheet { top: auto; left: 8px; right: 8px; bottom: 8px; width: auto; height: 52dvh; }
+  .toolbar { top: 12px; bottom: auto; }
 }
