@@ -68,7 +68,8 @@
 
     if (e.key === 'Escape') {
       const inSheet = (e.target as Element).closest('.sheet')
-      if (typing(e.target) && !inSheet) return (e.target as HTMLElement).blur()
+      // Leaving a note (or any field on the board) and opening the editor take one press, not two.
+      if (typing(e.target) && !inSheet) (e.target as HTMLElement).blur()
       if (app.menu) app.menu = null
       else if (app.draft) app.draft = null
       else if (app.selected.length) deselect()
