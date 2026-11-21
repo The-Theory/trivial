@@ -2,11 +2,17 @@
 // fills its icon like the rest. Anything that can't be read (a host without CORS or permission, not an
 // image) is shown as it is.
 
+import { webext } from './webext'
+
+// Only the extension may read other sites' images; on the hosted page, remote icons stay as they are
+// rather than failing a request each.
+const readable = (src: string) => !!webext || /^(data|blob):/.test(src)
+
 const cache = new Map<string, Promise<string>>()
 
 export function trimmed(src: string) {
   let job = cache.get(src)
-  if (!job) cache.set(src, (job = trim(src).catch(() => src)))
+  if (!job) cache.set(src, (job = readable(src) ? trim(src).catch(() => src) : Promise.resolve(src)))
   return job
 }
 
