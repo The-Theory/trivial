@@ -5,9 +5,15 @@
   let { tile }: { tile: WebTile } = $props()
 
   let online = $state(navigator.onLine)
+
+  // Keys typed after clicking into the site go to the site, so Escape and the other page keys stop
+  // working. Moving off the tile hands the keyboard back to the page: the page only sees the pointer
+  // move once it's outside the site's frame (leave events don't arrive from inside it).
+  let frame = $state<HTMLIFrameElement>()
+  const release = () => frame?.blur()
 </script>
 
-<svelte:window ononline={() => (online = true)} onoffline={() => (online = false)} />
+<svelte:window ononline={() => (online = true)} onoffline={() => (online = false)} onpointermove={release} />
 
 <div class="web zoom-{tile.zoom}">
   {#if !tile.url}
@@ -18,6 +24,7 @@
     <!-- Sandboxed so the site can't navigate the new tab page away on its own; a click on a link meant for the whole tab (target=_top) still can. Out of the tab order while editing. -->
     <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
     <iframe
+      bind:this={frame}
       src={safeUrl(tile.url)}
       title={tile.url}
       referrerpolicy="no-referrer"
